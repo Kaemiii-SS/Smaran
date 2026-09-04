@@ -42,23 +42,6 @@ export async function register(req, res) {
   }
 }
 
-// Handle check auth
-export async function checkAuth(req, res) {
-  try {
-    res.status(200).json({
-      user: { 
-        id: req.user._id, 
-        username: req.user.username, 
-        name: req.user.name, 
-        email: req.user.email, 
-        role: req.user.role 
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ error: 'Server error' });
-  }
-}
-
 // Handle user login
 export async function login(req, res) {
   try {
