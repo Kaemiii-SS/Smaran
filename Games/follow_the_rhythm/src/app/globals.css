@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f0f5f0;
+  --foreground: #181f18;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-mono: var(--font-space-mono);
+  --color-sage-lightest: #f0f5f0;
+  --color-sage-light: #e2ebe2;
+  --color-sage-medium: #b0ceb0;
+  --color-sage-dark: #99c099;
+  --color-text-dark: #181f18;
+  --color-button-dark: #12181f;
+  --color-ghibli-yellow: #fcd15c;
+  --color-ghibli-peach: #e49e89;
+  --color-ghibli-navy: #2c3541;
+  --color-ghibli-rose: #ffe4e6;
+  --color-ghibli-sky: #7dd3fc;
+  --color-ghibli-sage: #86efac;
+  --color-ghibli-amber: #fcd34d;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-space-mono), monospace;
+}
+.curtain {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  z-index: 9999;
+  pointer-events: none;
+}
+.curtain-col {
+  flex: 1;
+  height: 100%;
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(.76, 0, .24, 1);
+}
