@@ -1,0 +1,104 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "@fontsource/inter/800.css";
+@import url('https://fonts.googleapis.com/css2?family=Chewy&family=Fredoka:wght@400..700&display=swap');
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  
+  /* Smaran Palette */
+  --color-primary-green: #16a34a;
+  --color-soft-sage: #a3c0a2;
+  --color-light-sage: #b6ceb6;
+  --color-pale-mint: #d1e4d0;
+  --color-warm-cream: #fefce8;
+  --color-gentle-rose: #ffe4e6;
+  --color-soft-lavender: #ede9fe;
+  --color-warm-amber: #fbbf24;
+  --color-golden-yellow: #f6c84e;
+  --color-peach-skin: #df9886;
+  --color-butter-yellow: #d4b172;
+  --color-deep-forest: #293237;
+  --color-charcoal: #374151;
+  --color-soft-gray: #6b7280;
+
+  /* Map to semantic variables */
+  --color-background: var(--color-warm-cream);
+  --color-foreground: var(--color-deep-forest);
+  --color-card: var(--color-pale-mint);
+  --color-card-foreground: var(--color-deep-forest);
+  --color-popover: var(--color-warm-cream);
+  --color-popover-foreground: var(--color-deep-forest);
+  --color-primary: var(--color-primary-green);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--color-soft-sage);
+  --color-secondary-foreground: var(--color-deep-forest);
+  --color-muted: var(--color-light-sage);
+  --color-muted-foreground: var(--color-charcoal);
+  --color-accent: var(--color-gentle-rose);
+  --color-accent-foreground: var(--color-deep-forest);
+  --color-destructive: var(--color-gentle-rose); /* Softened destructive */
+  --color-border: var(--color-soft-sage);
+  --color-input: var(--color-soft-sage);
+  --color-ring: var(--color-warm-amber);
+}
+
+:root {
+  --radius: 1rem; /* 16px border radius as per spec */
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* Ghibli-style watercolor paper texture */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+  }
+}
+
+/* Add 3D perspective to cards */
+.perspective {
+  perspective: 1000px;
+}
+
+/* Card flip container */
+.card-inner {
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+  /* Shadow for cards as per spec */
+  .shadow-soft {
+    box-shadow: 0 8px 32px rgba(22, 163, 74, 0.08);
+  }
+}
+
+/* Add to your global CSS */
+@layer components {
+  .confetti-piece {
+    will-change: transform, opacity;
+  }
+}
