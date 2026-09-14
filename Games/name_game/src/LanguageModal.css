@@ -1,0 +1,137 @@
+.lang-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.lang-modal {
+  width: 90%;
+  max-width: 460px;
+  background: #f0f4fc;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  font-family: 'Lilita One', 'Space Grotesk', sans-serif;
+}
+
+.lang-modal-header {
+  background: #3b88fd;
+  color: #fff;
+  text-align: center;
+  padding: 24px 20px 40px;
+  position: relative;
+}
+
+.lang-modal-header h2 {
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Wavy divider trick using radial gradients */
+.lang-modal-header .wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 18px;
+  background-image: 
+    radial-gradient(circle at 10px 0, transparent 10px, #f0f4fc 11px);
+  background-size: 20px 100%;
+  background-repeat: repeat-x;
+}
+
+.lang-modal-body {
+  padding: 10px 24px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lang-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.lang-option {
+  background: #fff;
+  border: 2px solid #e0e6f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 0 #e0e6f0;
+}
+
+.lang-option:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 #e0e6f0;
+}
+
+.lang-option span {
+  color: #1a4478;
+  font-size: 18px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+}
+
+.lang-option.selected {
+  border-color: #d0d9e8;
+}
+
+.checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: #e9eef6;
+  border: 1px solid #d0d9e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lang-option.selected .checkbox {
+  background: #fff;
+  border-color: #d0d9e8;
+}
+
+.checkmark {
+  color: #63d122;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 900;
+  filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.1));
+}
+
+.lang-ok-btn {
+  background: linear-gradient(180deg, #75f02c 0%, #4dbb0b 100%);
+  border: none;
+  border-radius: 30px;
+  color: #fff;
+  font-family: 'Lilita One', 'Space Grotesk', sans-serif;
+  font-size: 28px;
+  padding: 10px 50px;
+  cursor: pointer;
+  box-shadow: 0 6px 0 #3a8a07, 0 8px 15px rgba(0,0,0,0.2);
+  transition: all 0.1s ease;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.lang-ok-btn:active {
+  transform: translateY(6px);
+  box-shadow: 0 0 0 #3a8a07;
+}

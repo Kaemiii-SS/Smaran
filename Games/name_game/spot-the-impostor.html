@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spot the Impostor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,700;1,600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#10261E;
+    --panel:#173229;
+    --card:#F5EFE1;
+    --gold:#E4B44C;
+    --coral:#D1573F;
+    --sage:#8FB996;
+    --ink:#2A2118;
+    --text:#F5EFE1;
+    --muted:#9FB3A6;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:radial-gradient(circle at 20% -10%, #1C3B2D 0%, var(--bg) 55%);
+    font-family:'Space Grotesk',sans-serif;
+    color:var(--text);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .stage{
+    width:100%;
+    max-width:920px;
+    background:var(--panel);
+    border-radius:28px;
+    padding:28px 32px 32px;
+    box-shadow:0 30px 60px rgba(0,0,0,.35);
+    position:relative;
+    overflow:hidden;
+  }
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+  }
+  .logo{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:22px;
+    color:var(--gold);
+  }
+  .hud{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    font-size:14px;
+    color:var(--muted);
+  }
+  .lives span{margin-left:4px;font-size:16px;}
+  .lives .lost{opacity:.25;}
+  .score{font-weight:700;color:var(--text);}
+
+  .panel-view{display:none;}
+  .panel-view.active{display:block;}
+
+  /* intro */
+  .intro{text-align:center;padding:36px 8px 8px;}
+  .intro h1{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:40px;
+    line-height:1.15;
+    margin:0 0 14px;
+  }
+  .intro h1 em{color:var(--gold);font-style:italic;}
+  .intro p{color:var(--muted);font-size:15px;max-width:460px;margin:0 auto 8px;}
+  .btn{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:15px;
+    border:none;
+    border-radius:100px;
+    padding:14px 32px;
+    background:var(--gold);
+    color:var(--ink);
+    cursor:pointer;
+    margin-top:26px;
+  }
+  .btn:hover{filter:brightness(1.08);}
+  .btn.ghost{background:transparent;border:2px solid var(--gold);color:var(--gold);}
+
+  /* countdown */
+  .countdown{text-align:center;padding:70px 0;}
+  .countdown h2{font-family:'Fraunces',serif;font-size:28px;margin:0 0 8px;}
+  .countdown p{color:var(--muted);max-width:380px;margin:0 auto;}
+  .countdown .num{
+    font-family:'Fraunces',serif;
+    font-size:64px;
+    font-weight:700;
+    color:var(--gold);
+    margin-top:22px;
+  }
+
+  /* round */
+  .prompt{text-align:center;margin-bottom:20px;}
+  .prompt h2{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:26px;
+    margin:0;
+  }
+  .prompt em{color:var(--gold);font-style:italic;}
+
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+  }
+  @media (max-width:640px){
+    .cards{grid-template-columns:repeat(2,1fr);}
+  }
+  .card{
+    position:relative;
+    background:var(--card);
+    border-radius:16px;
+    aspect-ratio:1/1;
+    overflow:hidden;
+    cursor:pointer;
+    border:3px solid transparent;
+    transition:transform .15s ease, border-color .2s ease;
+  }
+  .card img{width:100%;height:100%;object-fit:cover;display:block;}
+  .card:hover{transform:translateY(-4px);}
+  .card.correct{border-color:var(--sage);}
+  .card.wrong{border-color:var(--coral);}
+  .card.disabled{cursor:default;}
+  .badge{
+    position:absolute;top:8px;right:8px;
+    width:26px;height:26px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;font-weight:700;color:#fff;
+  }
+  .badge.correct{background:var(--sage);}
+  .badge.wrong{background:var(--coral);}
+  .caption{
+    position:absolute;left:0;right:0;bottom:0;
+    background:linear-gradient(to top, rgba(0,0,0,.75), transparent);
+    color:#fff;padding:20px 8px 8px;font-size:11px;line-height:1.4;
+    opacity:0;transform:translateY(4px);
+    transition:opacity .2s ease, transform .2s ease;
+  }
+  .card.revealed .caption{opacity:1;transform:translateY(0);}
+  .caption .t{font-weight:700;}
+
+  .feedback{
+    text-align:center;
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-weight:700;
+    font-size:22px;
+    height:30px;
+    margin-top:16px;
+    color:var(--sage);
+  }
+  .feedback.wrong{color:var(--coral);}
+
+  .timer-track{
+    margin-top:16px;
+    height:8px;
+    border-radius:8px;
+    background:rgba(255,255,255,.12);
+    overflow:hidden;
+  }
+  .timer-fill{
+    height:100%;
+    width:100%;
+    background:var(--gold);
+    transform-origin:left;
+    transition:background .3s ease;
+  }
+  .timer-fill.danger{background:var(--coral);}
+
+  .round-footer{
+    display:flex;justify-content:flex-end;margin-top:18px;
+  }
+
+  /* game over */
+  .over{text-align:center;padding:40px 0 8px;}
+  .over h2{font-family:'Fraunces',serif;font-size:32px;margin:0 0 6px;}
+  .over .final-score{font-size:48px;font-weight:700;color:var(--gold);margin:14px 0;}
+  .over p{color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="topbar">
+    <div class="logo">Spot the Impostor</div>
+    <div class="hud">
+      <div class="lives" id="lives"></div>
+      <div class="score" id="scoreLabel">0 pts</div>
+    </div>
+  </div>
+
+  <div class="panel-view active" id="view-intro">
+    <div class="intro">
+      <h1>Find the <em>fabricated</em> specimen</h1>
+      <p>Every round hides one made-up entry among three real ones. Spot it before the clock runs out — you get four misses before the collection closes.</p>
+      <button class="btn" id="startBtn">Ready, set, go!</button>
+    </div>
+  </div>
+
+  <div class="panel-view" id="view-countdown">
+    <div class="countdown">
+      <h2>Are you ready?</h2>
+      <p>Careful — you only get four misses before it's over.</p>
+      <div class="num" id="countdownNum">3</div>
+    </div>
+  </div>
+
+  <div class="panel-view" id="view-round">
+    <div class="prompt">
+      <h2>Find the fabricated <em id="roundLabel">leaf</em></h2>
+    </div>
+    <div class="cards" id="cards"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="timer-track"><div class="timer-fill" id="timerFill"></div></div>
+    <div class="round-footer">
+      <button class="btn" id="nextBtn" style="display:none;">Next</button>
+    </div>
+  </div>
+
+  <div class="panel-view" id="view-over">
+    <div class="over">
+      <h2>Collection closed</h2>
+      <div class="final-score" id="finalScore">0</div>
+      <p>points collected</p>
+      <button class="btn ghost" id="restartBtn">Play again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ROUNDS = [
+  { label: "leaf", impostor: 2, images: [
+    { url: "https://picsum.photos/seed/leaf1/500/500", title: "Field Study 12", maker: "Herbarium Archive" },
+    { url: "https://picsum.photos/seed/leaf2/500/500", title: "Pressed Specimen", maker: "Botanical Survey" },
+    { url: "https://picsum.photos/seed/leaf3/500/500", title: "Untitled", maker: "Fabricated entry" },
+    { url: "https://picsum.photos/seed/leaf4/500/500", title: "Study No. 4", maker: "Private Collection" },
+  ]},
+  { label: "shell", impostor: 0, images: [
+    { url: "https://picsum.photos/seed/shell1/500/500", title: "Untitled", maker: "Fabricated entry" },
+    { url: "https://picsum.photos/seed/shell2/500/500", title: "Coastal Find", maker: "Natural History Dept." },
+    { url: "https://picsum.photos/seed/shell3/500/500", title: "Specimen 9B", maker: "Field Archive" },
+    { url: "https://picsum.photos/seed/shell4/500/500", title: "Study of Form", maker: "Private Collection" },
+  ]},
+  { label: "feather", impostor: 3, images: [
+    { url: "https://picsum.photos/seed/feather1/500/500", title: "Plate VII", maker: "Ornithology Dept." },
+    { url: "https://picsum.photos/seed/feather2/500/500", title: "Specimen 4", maker: "Field Archive" },
+    { url: "https://picsum.photos/seed/feather3/500/500", title: "Study of Wing", maker: "Private Collection" },
+    { url: "https://picsum.photos/seed/feather4/500/500", title: "Untitled", maker: "Fabricated entry" },
+  ]},
+  { label: "crystal", impostor: 1, images: [
+    { url: "https://picsum.photos/seed/crystal1/500/500", title: "Mineral 21", maker: "Geology Archive" },
+    { url: "https://picsum.photos/seed/crystal2/500/500", title: "Untitled", maker: "Fabricated entry" },
+    { url: "https://picsum.photos/seed/crystal3/500/500", title: "Cut Study", maker: "Private Collection" },
+    { url: "https://picsum.photos/seed/crystal4/500/500", title: "Field Sample", maker: "Geology Archive" },
+  ]},
+  { label: "moth", impostor: 0, images: [
+    { url: "https://picsum.photos/seed/moth1/500/500", title: "Untitled", maker: "Fabricated entry" },
+    { url: "https://picsum.photos/seed/moth2/500/500", title: "Plate III", maker: "Entomology Dept." },
+    { url: "https://picsum.photos/seed/moth3/500/500", title: "Specimen 17", maker: "Field Archive" },
+    { url: "https://picsum.photos/seed/moth4/500/500", title: "Night Study", maker: "Private Collection" },
+  ]},
+  { label: "coral", impostor: 2, images: [
+    { url: "https://picsum.photos/seed/coral1/500/500", title: "Reef Sample 3", maker: "Marine Institute" },
+    { url: "https://picsum.photos/seed/coral2/500/500", title: "Study of Branch", maker: "Private Collection" },
+    { url: "https://picsum.photos/seed/coral3/500/500", title: "Untitled", maker: "Fabricated entry" },
+    { url: "https://picsum.photos/seed/coral4/500/500", title: "Field Sample", maker: "Marine Institute" },
+  ]},
+];
+
+const ROUND_SECONDS = 8;
+const HIT_WORDS = ["Sharp eye!", "Nice catch!", "Nailed it!", "Spot on!"];
+const MISS_WORDS = ["Not quite!", "So close!", "Look again next time!"];
+
+class OddOneOutGame {
+  constructor(root) {
+    this.root = root;
+    this.lives = 4;
+    this.score = 0;
+    this.roundIndex = 0;
+    this.order = [];
+    this.locked = false;
+    this.timerId = null;
+
+    this.livesEl = root.querySelector("#lives");
+    this.scoreEl = root.querySelector("#scoreLabel");
+    this.cardsEl = root.querySelector("#cards");
+    this.labelEl = root.querySelector("#roundLabel");
+    this.feedbackEl = root.querySelector("#feedback");
+    this.fillEl = root.querySelector("#timerFill");
+    this.nextBtn = root.querySelector("#nextBtn");
+    this.countdownNum = root.querySelector("#countdownNum");
+    this.finalScoreEl = root.querySelector("#finalScore");
+
+    root.querySelector("#startBtn").onclick = () => this.startCountdown();
+    root.querySelector("#restartBtn").onclick = () => this.reset();
+    this.nextBtn.onclick = () => this.nextRound();
+
+    this.renderLives();
+  }
+
+  show(id) {
+    this.root.querySelectorAll(".panel-view").forEach(v => v.classList.remove("active"));
+    this.root.querySelector("#" + id).classList.add("active");
+  }
+
+  renderLives() {
+    this.livesEl.innerHTML = "";
+    for (let i = 0; i < 4; i++) {
+      const s = document.createElement("span");
+      s.textContent = "\u2665";
+      if (i >= this.lives) s.classList.add("lost");
+      this.livesEl.appendChild(s);
+    }
+  }
+
+  startCountdown() {
+    this.order = [...Array(ROUNDS.length).keys()];
+    this.show("view-countdown");
+    let n = 3;
+    this.countdownNum.textContent = n;
+    const tick = setInterval(() => {
+      n -= 1;
+      if (n === 0) {
+        clearInterval(tick);
+        this.startRound();
+        return;
+      }
+      this.countdownNum.textContent = n;
+    }, 700);
+  }
+
+  startRound() {
+    if (this.roundIndex >= this.order.length) return this.endGame();
+    this.locked = false;
+    this.feedbackEl.textContent = "";
+    this.feedbackEl.className = "feedback";
+    this.nextBtn.style.display = "none";
+    this.show("view-round");
+
+    const round = ROUNDS[this.order[this.roundIndex]];
+    this.labelEl.textContent = round.label;
+    this.cardsEl.innerHTML = "";
+
+    round.images.forEach((img, i) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <img src="${img.url}" alt="${round.label} specimen">
+        <div class="caption"><div class="t">${img.title}</div><div>${img.maker}</div></div>
+      `;
+      card.onclick = () => this.handleGuess(i, round);
+      this.cardsEl.appendChild(card);
+    });
+
+    this.runTimer(round);
+  }
+
+  runTimer(round) {
+    const start = performance.now();
+    this.fillEl.style.transition = "none";
+    this.fillEl.style.width = "100%";
+    this.fillEl.classList.remove("danger");
+    void this.fillEl.offsetWidth;
+    this.fillEl.style.transition = "width .1s linear, background .3s ease";
+
+    const step = (now) => {
+      const elapsed = (now - start) / 1000;
+      const remaining = Math.max(0, 1 - elapsed / ROUND_SECONDS);
+      this.fillEl.style.width = (remaining * 100) + "%";
+      if (remaining < 0.3) this.fillEl.classList.add("danger");
+      if (remaining <= 0) {
+        this.timerId = null;
+        this.handleGuess(-1, round);
+        return;
+      }
+      this.timerId = requestAnimationFrame(step);
+    };
+    this.timerId = requestAnimationFrame(step);
+  }
+
+  handleGuess(index, round) {
+    if (this.locked) return;
+    this.locked = true;
+    if (this.timerId) cancelAnimationFrame(this.timerId);
+
+    const correct = index === round.impostor;
+    const remainingFraction = parseFloat(this.fillEl.style.width) / 100 || 0;
+
+    const cards = [...this.cardsEl.children];
+    cards.forEach(c => c.classList.add("disabled", "revealed"));
+
+    if (correct) {
+      const gained = Math.round(20 + remainingFraction * 80);
+      this.score += gained;
+      this.scoreEl.textContent = this.score + " pts";
+      cards[index].classList.add("correct");
+      cards[index].insertAdjacentHTML("beforeend", '<div class="badge correct">&#10003;</div>');
+      this.feedbackEl.textContent = HIT_WORDS[Math.floor(Math.random() * HIT_WORDS.length)] + `  +${gained}`;
+      this.feedbackEl.className = "feedback";
+    } else {
+      this.lives -= 1;
+      this.renderLives();
+      if (index >= 0) {
+        cards[index].classList.add("wrong");
+        cards[index].insertAdjacentHTML("beforeend", '<div class="badge wrong">&#10007;</div>');
+      }
+      cards[round.impostor].classList.add("correct");
+      this.feedbackEl.textContent = MISS_WORDS[Math.floor(Math.random() * MISS_WORDS.length)];
+      this.feedbackEl.className = "feedback wrong";
+    }
+
+    this.nextBtn.textContent = this.lives <= 0 ? "See results" : "Next";
+    this.nextBtn.style.display = "inline-block";
+  }
+
+  nextRound() {
+    this.roundIndex += 1;
+    if (this.lives <= 0 || this.roundIndex >= this.order.length) {
+      this.endGame();
+    } else {
+      this.startRound();
+    }
+  }
+
+  endGame() {
+    this.finalScoreEl.textContent = this.score;
+    this.show("view-over");
+  }
+
+  reset() {
+    this.lives = 4;
+    this.score = 0;
+    this.roundIndex = 0;
+    this.scoreEl.textContent = "0 pts";
+    this.renderLives();
+    this.show("view-intro");
+  }
+}
+
+new OddOneOutGame(document.querySelector(".stage"));
+</script>
+</body>
+</html>

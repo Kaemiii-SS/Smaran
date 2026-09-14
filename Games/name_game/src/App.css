@@ -1,0 +1,384 @@
+.landing-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  /* Align to bottom */
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #000;
+}
+
+.background-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  /* or contain if you want the whole HD video visible without cropping */
+  z-index: 1;
+}
+
+.landing-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: #FFE4E6;
+  /* Gentle Rose */
+  background: rgba(23, 50, 41, 0.6);
+  /* Panel color with opacity */
+  padding: 40px 60px;
+  border-radius: 24px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 32px rgba(22, 163, 74, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.landing-content h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 64px;
+  margin: 0 0 10px;
+  color: #F6C84E;
+  /* Golden Yellow */
+  letter-spacing: -1px;
+}
+
+.landing-content p {
+  font-size: 20px;
+  margin: 0 0 40px;
+  opacity: 0.9;
+}
+
+.button-group {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 60px;
+  /* Space from bottom */
+}
+
+.menu-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 30px 40px;
+  max-width: 800px;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.play-btn {
+  position: relative;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: 36px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #FFF3C4;
+  /* Creamy yellow text */
+  -webkit-text-stroke: 2px #C56200;
+  /* Orange outline on text */
+  text-shadow: 0 4px 0 #B35500;
+  /* 3D text shadow */
+  border: 4px solid #DE6A00;
+  /* Outer dark orange border */
+  border-radius: 100px;
+  padding: 12px 20px;
+  /* Reduced vertical padding for the wide pill look */
+  background: linear-gradient(180deg, #FFD13B 0%, #FF9E00 100%);
+  cursor: pointer;
+  width: 100%;
+  /* Stretch to fill the wide card */
+  box-shadow:
+    inset 0 8px 0 rgba(255, 255, 255, 0.4),
+    /* Top inner glare band */
+    inset 0 -8px 0 rgba(210, 100, 0, 0.6),
+    /* Bottom inner shadow */
+    0 8px 0 #B84A00,
+    /* Outer 3D lip */
+    0 14px 15px rgba(0, 0, 0, 0.4);
+  /* Drop shadow */
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  overflow: hidden;
+  /* Keep glares inside rounded corners */
+}
+
+/* Top-left white glare spot */
+.play-btn::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 30px;
+  width: 40px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  transform: rotate(-15deg);
+  pointer-events: none;
+}
+
+/* Bottom-right subtle glare spot */
+.play-btn::after {
+  content: "";
+  position: absolute;
+  bottom: 10px;
+  right: 30px;
+  width: 25px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  transform: rotate(-10deg);
+  pointer-events: none;
+}
+
+.play-btn.small-btn {
+  /* Keep the exact same physical size as the main button, just reduce text size slightly */
+  font-size: 28px;
+  padding: 12px 20px;
+}
+
+.play-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow:
+    inset 0 8px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -8px 0 rgba(210, 100, 0, 0.6),
+    0 10px 0 #B84A00,
+    0 18px 20px rgba(0, 0, 0, 0.4);
+}
+
+.play-btn:active {
+  transform: translateY(6px);
+  /* Push the button down */
+  box-shadow:
+    inset 0 4px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -4px 0 rgba(210, 100, 0, 0.6),
+    0 2px 0 #B84A00,
+    /* Lip gets smaller */
+    0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* ----------------------------------------------------
+   MENU BUTTONS (Independent from Landing Page Button)
+   ---------------------------------------------------- */
+.menu-btn {
+  position: relative;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: 36px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #FFF3C4;
+  -webkit-text-stroke: 2px #C56200;
+  text-shadow: 0 4px 0 #B35500;
+  border: 4px solid #DE6A00;
+  border-radius: 100px;
+  padding: 12px 20px;
+  background: linear-gradient(180deg, #FFD13B 0%, #FF9E00 100%);
+  cursor: pointer;
+  width: 30%;
+  box-shadow:
+    inset 0 8px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -8px 0 rgba(210, 100, 0, 0.6),
+    0 8px 0 #B84A00,
+    0 14px 15px rgba(0, 0, 0, 0.4);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  overflow: hidden;
+}
+
+.menu-btn::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 30px;
+  width: 40px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  transform: rotate(-15deg);
+  pointer-events: none;
+}
+
+.menu-btn::after {
+  content: "";
+  position: absolute;
+  bottom: 10px;
+  right: 30px;
+  width: 25px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  transform: rotate(-10deg);
+  pointer-events: none;
+}
+
+.menu-btn.small-btn {
+  font-size: 28px;
+  padding: 12px 20px;
+}
+
+.menu-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow:
+    inset 0 8px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -8px 0 rgba(210, 100, 0, 0.6),
+    0 10px 0 #B84A00,
+    0 18px 20px rgba(0, 0, 0, 0.4);
+}
+
+.menu-btn:active {
+  transform: translateY(6px);
+  box-shadow:
+    inset 0 4px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -4px 0 rgba(210, 100, 0, 0.6),
+    0 2px 0 #B84A00,
+    0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+.mascot-video {
+  position: fixed;
+  bottom: 2px;
+  right: -20px;
+  width: 600px;
+  height: 400px;
+
+  object-fit: contain;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+/* ----------------------------------------------------
+   RESPONSIVENESS
+   ---------------------------------------------------- */
+@media (max-width: 768px) {
+  .landing-content {
+    padding: 20px 30px;
+    width: 90%;
+  }
+  
+  .landing-content h1 {
+    font-size: 40px;
+  }
+  
+  .landing-content p {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .menu-card {
+    padding: 20px;
+  }
+  
+  .play-btn {
+    font-size: 28px;
+    padding: 10px 16px;
+  }
+  
+  .play-btn.small-btn {
+    font-size: 22px;
+  }
+  
+  .menu-btn {
+    width: 80%;
+    font-size: 28px;
+  }
+  
+  .menu-btn.small-btn {
+    font-size: 22px;
+  }
+  
+  .mascot-video {
+    width: 260px;
+    height: 175px;
+    right: -8px;
+    bottom: 70px; /* sit above bottom corner buttons */
+  }
+
+  .lang-btn {
+    font-size: 16px;
+    padding: 8px 14px;
+    top: 14px;
+    right: 14px;
+  }
+
+  .button-group {
+    margin-bottom: 90px; /* extra room for mascot */
+  }
+}
+
+/* Small mobile (≤ 480px) */
+@media (max-width: 480px) {
+  .menu-btn {
+    width: 92%;
+    font-size: 22px;
+  }
+
+  .menu-btn.small-btn {
+    font-size: 18px;
+  }
+
+  .play-btn {
+    font-size: 22px;
+    padding: 10px 12px;
+  }
+
+  /* Hide mascot on tiny screens to avoid overlap with corner buttons */
+  .mascot-video {
+    width: 180px;
+    height: 120px;
+    right: -6px;
+    bottom: 65px;
+  }
+
+  .lang-btn {
+    font-size: 14px;
+    padding: 6px 10px;
+    gap: 5px;
+  }
+
+  .button-group {
+    margin-bottom: 80px;
+  }
+}
+
+.lang-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: linear-gradient(180deg, #ffa726 0%, #f57c00 100%);
+  border: 3px solid #e65100;
+  box-shadow: 0 4px 0 #e65100, 0 8px 15px rgba(0,0,0,0.3);
+  color: #fff;
+  font-family: 'Lilita One', 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  padding: 10px 20px;
+  border-radius: 20px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.lang-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 #e65100;
+}
