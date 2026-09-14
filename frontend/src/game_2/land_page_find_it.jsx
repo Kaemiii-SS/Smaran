@@ -11,7 +11,7 @@ export default function LandingPage({ onEnterGame }) {
             <div
                 className="absolute inset-0 bg-cover bg-center"
                 style={{
-                    backgroundImage: "url('/find-it-bg.png')",
+                    backgroundImage: `url(${backgroundImage})`,
                 }}
             />
 

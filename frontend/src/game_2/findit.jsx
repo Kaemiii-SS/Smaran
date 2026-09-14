@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import LandingPage from "./landPageFintit";
+import LandingPage from "./land_page_find_it";
+import backgroundImage from "./Gemini_Generated_Image_gttwnqgttwnqgttw.png";
 
 /* =========================================================
    FIND IT - GAME PAGE
@@ -879,7 +880,7 @@ export default function GamePage() {
             <div
                 className="fixed inset-0 bg-cover bg-center"
                 style={{
-                    backgroundImage: "url('/find-it-bg.png')",
+                    backgroundImage: `url(${backgroundImage})`,
                 }}
             />
 
