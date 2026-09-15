@@ -12,7 +12,8 @@ export default function Register() {
         username: '',
         email: '',
         password: '',
-        role: 'Patient'
+        role: 'Patient',
+        caretakerUsername: ''
     });
     
     // Status state
@@ -212,6 +213,27 @@ export default function Register() {
                                         />
                                     </div>
                                 </div>
+
+                                {formData.role === 'Patient' && (
+                                    <div className="space-y-1.5">
+                                        <label className="block text-sm font-extrabold text-[#0f1912]" style={{ fontFamily: "'Courier New', Courier, monospace" }}>
+                                            Caretaker Username (Optional)
+                                        </label>
+                                        <div className="relative">
+                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                                <User className="h-5 w-5 text-[#1a2e22]/50" />
+                                            </div>
+                                            <input 
+                                                type="text"
+                                                name="caretakerUsername"
+                                                value={formData.caretakerUsername}
+                                                onChange={handleChange}
+                                                placeholder="caretaker123" 
+                                                className="w-full pl-11 pr-4 py-3 bg-white/70 border border-white/80 rounded-2xl text-[#0f1912] font-semibold placeholder-[#1a2e22]/40 focus:outline-none focus:ring-2 focus:ring-emerald-700/50 focus:bg-white transition-all shadow-sm"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
 
                                 <button 
                                     type="submit"

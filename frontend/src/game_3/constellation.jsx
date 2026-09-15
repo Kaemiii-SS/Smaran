@@ -5,6 +5,7 @@ import {
     useMemo,
     useEffect,
 } from "react";
+import axios from "axios";
 
 import {
     VIEW_W,
@@ -315,7 +316,35 @@ export default function ThreadTheStars() {
         setBest((currentBest) => Math.max(currentBest, sequence.length));
 
         // Increase level
-        setLevel((currentLevel) => currentLevel + 1);
+        setLevel((currentLevel) => {
+            const nextLvl = currentLevel + 1;
+            
+            // Send analytics to backend
+            try {
+                const token = localStorage.getItem('token');
+                const user = JSON.parse(localStorage.getItem('user'));
+                if (token && user) {
+                    const patientId = user.id || user._id;
+                    const score = sequence.length * 10;
+                    
+                    axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/analytics`, {
+                        patientId,
+                        gameId: 'constellation',
+                        score: score,
+                        details: {
+                            level: nextLvl,
+                            sequenceLength: sequence.length
+                        }
+                    }, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }).catch(err => console.error("Failed to save analytics", err));
+                }
+            } catch (e) {
+                console.error(e);
+            }
+            
+            return nextLvl;
+        });
     }, [sequence]);
 
     // ========================================================

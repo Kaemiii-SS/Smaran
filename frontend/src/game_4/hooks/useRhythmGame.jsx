@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import axios from 'axios';
 import { useAudioEngine } from './useAudioEngine';
 import { useVoiceFeedback } from './useVoiceFeedback';
 import { GAME_NODES } from '../lib/nodes';
@@ -113,6 +114,28 @@ export function useRhythmGame() {
         
         if (!isPlayingRef.current) return;
         
+        // Send analytics to backend
+        try {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (token && user) {
+                const patientId = user.id || user._id;
+                axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/analytics`, {
+                    patientId,
+                    gameId: 'follow_the_rhythm',
+                    score: level * 20, // Basic score calculation
+                    details: {
+                        level: level,
+                        difficulty: difficulty
+                    }
+                }, {
+                    headers: { Authorization: `Bearer ${token}` }
+                }).catch(err => console.error("Failed to save analytics", err));
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
         const nextLevel = level + 1;
         if (nextLevel > 3) {
           speak(t.voiceComplete);

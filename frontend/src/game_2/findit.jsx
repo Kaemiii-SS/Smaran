@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import axios from "axios";
 import LandingPage from "./land_page_find_it";
 import backgroundImage from "./Gemini_Generated_Image_gttwnqgttwnqgttw.png";
 
@@ -709,7 +710,33 @@ export default function GamePage() {
         setFeedback("");
         setCurrentRound((previous) => previous ? { ...previous, hintActive: false } : previous);
         speak(`Excellent! You completed level ${completed}.`);
-    }, [clearTimers, levelIndex, speak]);
+
+        // Send analytics to backend
+        try {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (token && user) {
+                const patientId = user.id || user._id;
+                // Calculate basic score based on found vs attempts
+                const currentScore = attempts > 0 ? Math.max(10, Math.floor((found / attempts) * 100 * completed)) : 100;
+                
+                axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/analytics`, {
+                    patientId,
+                    gameId: 'find_it',
+                    score: currentScore,
+                    details: {
+                        level: completed,
+                        objectsFound: found,
+                        attempts: attempts
+                    }
+                }, {
+                    headers: { Authorization: `Bearer ${token}` }
+                }).catch(err => console.error("Failed to save analytics", err));
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }, [clearTimers, levelIndex, speak, attempts, found]);
 
     /* =========================================================
        HANDLE OBJECT CLICK

@@ -1,6 +1,7 @@
 import User from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
 import { registerSchema, loginSchema } from '../validators/auth.validator.js';
+import PatientCaregiver from '../models/patientCaregiver.model.js';
 
 // Generate JWT token
 function generateToken(id) {
@@ -14,7 +15,6 @@ export async function register(req, res) {
   try {
     const parsedData = registerSchema.parse(req.body);
     
-    // Check if either email OR username already exists
     const exists = await User.findOne({ 
       $or: [{ email: parsedData.email }, { username: parsedData.username }] 
     });
@@ -23,8 +23,24 @@ export async function register(req, res) {
       return res.status(400).json({ error: 'User with this email or username already exists' });
     }
 
+    let caretaker = null;
+    if (parsedData.role === 'Patient' && parsedData.caretakerUsername) {
+      caretaker = await User.findOne({ username: parsedData.caretakerUsername, role: 'Caretaker' });
+      if (!caretaker) {
+        return res.status(400).json({ error: 'Caretaker username not found' });
+      }
+    }
+
     const user = await User.create(parsedData);
     const token = generateToken(user._id);
+
+    // If patient and provided valid caretaker, map them
+    if (caretaker) {
+      await PatientCaregiver.create({
+        caregiverId: caretaker._id,
+        patientId: user._id
+      });
+    }
 
     res.status(201).json({
       user: { 

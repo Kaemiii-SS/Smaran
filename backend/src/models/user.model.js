@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema({
     enum: ['Patient', 'Caretaker'],
     required: true 
   },
+  profilePicUrl: { type: String, default: '' },
+  bio: { type: String, default: '' },
+  degree: { type: String, default: '' }, // For caretakers
+  speciality: { type: String, default: '' }, // For caretakers
 }, { timestamps: true });
 
 // Hash password

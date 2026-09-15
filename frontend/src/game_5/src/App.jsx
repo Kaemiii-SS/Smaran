@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import axios from "axios";
 import { Toaster } from "./components/ui/sonner";
 import { GameBoard } from "./components/GameBoard";
 import { GameModal } from "./components/GameModal";
@@ -67,7 +68,7 @@ function App() {
       document.removeEventListener("keydown", onFirstInteraction);
       document.removeEventListener("touchstart", onFirstInteraction);
     };
-  }, []);
+  }, [musicEnabled]);
   useEffect(() => {
     if (!audioRef.current) return;
     if (musicEnabled) {
@@ -149,13 +150,36 @@ function App() {
       setIsRunning(false);
       saveScore(timer, level);
       completeLevel();
+      
+      // Send analytics to backend
+      try {
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (token && user) {
+          const patientId = user.id || user._id;
+          axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/analytics`, {
+            patientId,
+            gameId: 'recall',
+            score: score, // using the component's score state
+            details: {
+              level,
+              timeTaken: timer
+            }
+          }, {
+            headers: { Authorization: `Bearer ${token}` }
+          }).catch(err => console.error("Failed to save analytics", err));
+        }
+      } catch (e) {
+        console.error(e);
+      }
+
       if (timer > 0 && (highScore === null || timer < highScore)) {
         setHighScore(timer);
       }
       confettiRef.current?.burst(window.innerWidth / 2, window.innerHeight / 2, { particleCount: 150 });
       speak(`Wonderful! You've completed level ${level}.`);
     }
-  }, [isRoundComplete, gameStarted, gameWon, timer, highScore, saveScore, level, completeLevel, speak]);
+  }, [isRoundComplete, gameStarted, gameWon, timer, highScore, saveScore, level, completeLevel, speak, score]);
   const handleCardClick = useCallback((idx) => {
     if (!gameStarted || isChecking || deck[idx].isEmpty) return;
     if (flippedIndices.includes(idx) || matchedIndices.includes(idx)) return;
@@ -190,7 +214,7 @@ function App() {
     } else {
       speak("Good. Now find the matching one.", 0.9);
     }
-  }, [gameStarted, isChecking, deck, flippedIndices, matchedIndices, trackClick, trackAttempt, levelConfig.delay, speak]);
+  }, [gameStarted, isChecking, deck, flippedIndices, matchedIndices, trackClick, trackAttempt, levelConfig.delay, speak, streak]);
   const startGame = useCallback(() => {
     setFlippedIndices([]);
     setMatchedIndices([]);
