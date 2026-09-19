@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { CheckCircle2, AlertCircle, ImageIcon, Flame, Gamepad2, Send, X } from 'lucide-react';
+import { CheckCircle2, AlertCircle, ImageIcon, Flame, Gamepad2, Send, X, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -312,7 +312,7 @@ export default function DashboardOverview() {
                                 View All
                             </button>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 h-full">
+                        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 h-full">
                             <motion.button 
                                 onClick={() => navigate('/game/find-it')}
                                 whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} 
@@ -343,6 +343,16 @@ export default function DashboardOverview() {
                                 </div>
                                 <p className="font-extrabold text-[#0f1912] text-sm">Follow Rhythm</p>
                             </motion.button>
+                            <motion.button 
+                                onClick={() => navigate('/game/name-game')}
+                                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} 
+                                className="bg-white hover:bg-gray-50 border border-gray-100 rounded-2xl p-5 text-center transition-all shadow-sm flex flex-col items-center justify-center"
+                            >
+                                <div className="w-14 h-14 bg-pink-50 rounded-full flex items-center justify-center mb-4">
+                                    <span className="text-3xl">👁️</span>
+                                </div>
+                                <p className="font-extrabold text-[#0f1912] text-sm">See & Say</p>
+                            </motion.button>
                         </div>
                     </motion.div>
 
@@ -365,6 +375,16 @@ export default function DashboardOverview() {
                                 </div>
                             </div>
                         </div>
+                        <motion.button
+                            onClick={() => navigate('/dashboard/ai-chat')}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            title="Open full AI chat"
+                            className="flex items-center gap-2 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-bold rounded-xl transition-colors shadow-sm"
+                        >
+                            <Sparkles className="w-3.5 h-3.5" />
+                            Full Chat
+                        </motion.button>
                     </div>
 
                     <div className="flex-1 overflow-y-auto p-6 space-y-6">

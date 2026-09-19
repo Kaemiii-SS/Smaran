@@ -1,4 +1,4 @@
-import { Home, Gamepad2, MessageSquare, Calendar, Settings, Brain } from 'lucide-react';
+import { Home, Gamepad2, MessageSquare, Calendar, Settings, Brain, Bot } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Sidebar() {
@@ -19,7 +19,11 @@ export default function Sidebar() {
                 </Link>
                 <Link to="/dashboard/chat" className="p-3 text-[#1a2e22] hover:bg-white/50 rounded-xl transition-colors group relative">
                     <MessageSquare className="w-6 h-6" />
-                    <span className="absolute left-full ml-4 px-2 py-1 bg-[#0f1912] text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap">Chat History</span>
+                    <span className="absolute left-full ml-4 px-2 py-1 bg-[#0f1912] text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap">Chat</span>
+                </Link>
+                <Link to="/dashboard/ai-chat" className="p-3 text-[#1a2e22] hover:bg-white/50 rounded-xl transition-colors group relative">
+                    <Bot className="w-6 h-6" />
+                    <span className="absolute left-full ml-4 px-2 py-1 bg-[#0f1912] text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap">AI Companion</span>
                 </Link>
                 <Link to="/dashboard/schedule" className="p-3 text-[#1a2e22] hover:bg-white/50 rounded-xl transition-colors group relative">
                     <Calendar className="w-6 h-6" />

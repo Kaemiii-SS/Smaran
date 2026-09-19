@@ -1,4 +1,4 @@
-import { Search, Map, Music, Brain } from 'lucide-react';
+import { Search, Map, Music, Brain, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -38,6 +38,13 @@ export default function GamesCatalog() {
             icon: <Brain className="w-8 h-8 text-orange-700" />,
             path: "/game/recall",
             color: "bg-orange-100"
+        },
+        {
+            title: "See & Say",
+            description: "Identify animals and faces by name — builds recognition and language recall.",
+            icon: <Eye className="w-8 h-8 text-pink-700" />,
+            path: "/game/name-game",
+            color: "bg-pink-100"
         }
     ];
 

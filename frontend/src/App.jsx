@@ -8,10 +8,12 @@ import RoleBasedDashboard from './pages/RoleBasedDashboard.jsx';
 import DashboardOverview from './components/DashboardOverview.jsx';
 import GamesCatalog from './pages/GamesCatalog.jsx';
 import ChatHistory from './pages/ChatHistory.jsx';
+import GeminiChat from './components/geminiDesign.jsx';
 import FindItGame from './game_2/findit.jsx';
 import ConstellationGame from './game_3/constellation.jsx';
 import FollowTheRhythmGame from './game_4/follow_the_rhythm.jsx';
 import Game5Entry from './game_5/game_5_entry.jsx';
+import NameGameEntry from './name_game/name_game_entry.jsx';
 import PatientSchedule from './pages/PatientSchedule.jsx';
 import Profile from './pages/Profile.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
@@ -56,6 +58,7 @@ function App() {
             <Route index element={<DashboardOverview />} />
             <Route path="games" element={<GamesCatalog />} />
             <Route path="chat" element={<ChatHistory />} />
+            <Route path="ai-chat" element={<GeminiChat />} />
             <Route path="schedule" element={<PatientSchedule />} />
             <Route path="profile" element={<Profile />} />
           </Route>
@@ -65,6 +68,7 @@ function App() {
           <Route path="/game/constellation" element={<ConstellationGame />} />
           <Route path="/game/follow-the-rhythm" element={<FollowTheRhythmGame />} />
           <Route path="/game/recall" element={<Game5Entry />} />
+          <Route path="/game/name-game" element={<NameGameEntry />} />
         </Route>
       </Routes>
     </div>

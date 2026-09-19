@@ -1,4 +1,5 @@
 import ChatbotSession from '../models/chatbotSession.model.js';
+import { askGeminiWithHistory as generateChatResponse } from '../gemini/gemini.service.js';
 
 export async function sendMessage(req, res) {
   try {
@@ -6,36 +7,28 @@ export async function sendMessage(req, res) {
     const patientId = req.user._id;
 
     // 1. Fetch or create a session for today
-    // For simplicity, we just keep one massive session per patient in MVP, 
-    // or create a new one if none exists.
     let session = await ChatbotSession.findOne({ patientId });
     if (!session) {
       session = await ChatbotSession.create({ patientId, messages: [] });
     }
 
-    // 2. Append user message
+    // 2. Get history before adding the new message
+    const history = [...session.messages];
+
+    // 3. Append user message to the db session
     session.messages.push({ role: 'user', content });
 
-    // 3. Generate Mock AI Response
-    // Since we don't have an LLM key yet, we'll respond with a generic but supportive message.
-    const lowerContent = content.toLowerCase();
-    let mockResponse = "I hear you. Let me know if you need help with your routine or playing a memory game.";
-    
-    if (lowerContent.includes("remember") || lowerContent.includes("forget")) {
-      mockResponse = "It's completely normal to forget things sometimes. Should we check your daily reminders?";
-    } else if (lowerContent.includes("game")) {
-      mockResponse = "Playing games is a great idea! Try the 'Card Match' or 'Sequence' game on your dashboard.";
-    } else if (lowerContent.includes("hello") || lowerContent.includes("hi")) {
-      mockResponse = `Hello there! How are you feeling today?`;
-    }
+    // 4. Generate AI Response using Gemini
+    const aiResponse = await generateChatResponse(content, history);
 
-    // 4. Append AI message
-    session.messages.push({ role: 'assistant', content: mockResponse });
+    // 5. Append AI message to the db session
+    session.messages.push({ role: 'assistant', content: aiResponse });
     await session.save();
 
+    // The frontend expects the AI's message in the `reply` field.
     res.status(200).json({
       message: 'Success',
-      response: mockResponse,
+      reply: aiResponse,
       session
     });
   } catch (error) {
